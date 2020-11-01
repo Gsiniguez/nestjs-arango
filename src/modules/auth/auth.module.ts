@@ -5,11 +5,24 @@ import { UsersService } from '../users/users.service';
 import { UsersRepository } from '../users/users.repository';
 import { UsersModule } from '../users/users.module';
 import { BcryptModule } from 'src/bcrypt/bcrypt.module';
-import { LocalStrategy } from './local.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
-  imports: [UsersModule, BcryptModule]
+  imports: [
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_EXPIRES_IN'),
+      }),
+    }),
+    UsersModule,
+    BcryptModule,
+  ],
 })
-export class AuthModule { }
+export class AuthModule {}
