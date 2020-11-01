@@ -1,11 +1,11 @@
 import * as ArangoDB from "arangojs"
-
-const connection = 'http://root:@localhost:8529'
+import { ConfigService } from "@nestjs/config";
 
 export const arangoProvider = [
     {
         provide: "ARANGODB",
-        useFactory: async () =>
-            await new ArangoDB.Database(connection).database("TuCancha"),
+        useFactory: async (config: ConfigService) =>
+            await new ArangoDB.Database(config.get<string>("DATABASE_URL")).database(config.get<string>("DATABASE_NAME")),
+        inject: [ConfigService]
     },
 ]

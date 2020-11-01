@@ -1,13 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ArangoDbRepository } from 'src/arangodb/arangodb.repository';
 import { ArangoDbService } from 'src/arangodb/arangodb.service';
+import { BcryptService } from 'src/bcrypt/bcrypt.service';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
 
     constructor(
-        private readonly userRepo: UsersRepository
+        private readonly userRepo: UsersRepository,
+        private readonly bcrypt: BcryptService
     ) { }
 
     findAll() {
@@ -18,7 +20,12 @@ export class UsersService {
         return this.userRepo.findById(id);
     }
 
-    create(obj: Object) {
+    async findByUsername(username: string) {
+        return await this.userRepo.findByUsername(username);
+    }
+
+    async create(obj: Object) {
+        obj["password"] = await this.bcrypt.hash(obj["password"])
         return this.userRepo.save(obj);
     }
 

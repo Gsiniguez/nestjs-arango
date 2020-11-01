@@ -19,8 +19,8 @@ export class UsersController {
     }
 
     @Post("/")
-    createUser(@Body() body) {
-        return this.service.create(body);
+    async createUser(@Body() body) {
+        return await this.service.create(body);
     }
 
     @Put("/:id")
