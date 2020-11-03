@@ -15,6 +15,7 @@ export class UsersRepository extends ArangoDbRepository {
     super('Users', database);
   }
 
+  //TODO Hacer que retorne con los roles.
   async findByUsername(username: string) {
     try {
       const collection = await this.getCollection();
@@ -49,6 +50,7 @@ export class UsersRepository extends ArangoDbRepository {
     }
   }
 
+  //TODO Terminar de implementar y hacer funcionar 
   async findRolesByUsername(username: string) {
     try {
       const collection = await this.getCollection();
