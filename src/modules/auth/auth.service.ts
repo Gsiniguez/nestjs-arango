@@ -22,6 +22,12 @@ export class AuthService {
     return null;
   }
 
+  async userRoles(username: string) {
+    const userRoles = await this.userService.findRolesByUsername(username);
+
+    return userRoles;
+  }
+
   async createToken(user: Object) {
     return { access_token: this.jwtService.sign(user) };
   }

@@ -3,11 +3,11 @@ import { SchemaOptions } from "arangojs/collection";
 export const RoleScheme: SchemaOptions = {
     rule: {
         properties: {
-            role: { type: "string" },
+            roles: { type: "array" },
         },
         // additionalProperties: { type: "string" },
-        required: ["role"]
-    }, level: "strict", message: "Debe ingresar correctamente el campo role."
+        required: ["roles"]
+    }, level: "strict", message: "Debe ingresar correctamente el campo roles."
 }
 
 export const UserScheme: SchemaOptions = {

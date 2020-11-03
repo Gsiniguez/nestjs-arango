@@ -6,34 +6,44 @@ import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    private readonly userRepo: UsersRepository,
+    private readonly bcrypt: BcryptService,
+  ) {}
 
-    constructor(
-        private readonly userRepo: UsersRepository,
-        private readonly bcrypt: BcryptService
-    ) { }
+  findAll() {
+    return this.userRepo.findAll();
+  }
 
-    findAll() {
-        return this.userRepo.findAll()
-    }
+  findById(id: string) {
+    return this.userRepo.findById(id);
+  }
 
-    findById(id: string) {
-        return this.userRepo.findById(id);
-    }
+  async findByUsername(username: string) {
+    return await this.userRepo.findByUsername(username);
+  }
 
-    async findByUsername(username: string) {
-        return await this.userRepo.findByUsername(username);
-    }
+  async findRolesByUsername(username: string) {
+    return await this.userRepo.findRolesByUsername(username);
+  }
 
-    async create(obj: Object) {
-        obj["password"] = await this.bcrypt.hash(obj["password"])
-        return this.userRepo.save(obj);
-    }
+  async create(obj: Object) {
+    obj['password'] = await this.bcrypt.hash(obj['password']);
 
-    update(id: string, obj: Object) {
-        return this.userRepo.update(id, obj);
-    }
+    const user = await this.userRepo.save(obj);
+    const roles = await this.userRepo.saveUserRole(user, {
+      _username: user.username,
+      roles: ['COMUN'],
+    });
+    user['roles'] = roles.roles;
+    return user;
+  }
 
-    delete(id: string) {
-        return this.userRepo.delete(id);
-    }
+  update(id: string, obj: Object) {
+    return this.userRepo.update(id, obj);
+  }
+
+  delete(id: string) {
+    return this.userRepo.delete(id);
+  }
 }
