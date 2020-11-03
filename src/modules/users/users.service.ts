@@ -23,9 +23,6 @@ export class UsersService {
     return await this.userRepo.findByUsername(username);
   }
 
-  async findRolesByUsername(username: string) {
-    return await this.userRepo.findRolesByUsername(username);
-  }
 
   async create(obj: Object) {
     obj['password'] = await this.bcrypt.hash(obj['password']);

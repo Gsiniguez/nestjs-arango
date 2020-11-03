@@ -15,12 +15,18 @@ export class UsersRepository extends ArangoDbRepository {
     super('Users', database);
   }
 
-  //TODO Hacer que retorne con los roles.
   async findByUsername(username: string) {
     try {
       const collection = await this.getCollection();
+      const edgeCollection = await this.getCollection("Users-Roles");
       const cursor = await this.database.query(
-        aql`FOR d IN ${collection} FILTER d.state == "ACTIVE" FILTER d.username == ${username} RETURN d`,
+        aql`
+          FOR d IN ${collection}
+          FILTER d.state == "ACTIVE" 
+          FILTER d.username == ${username} 
+          for v in 1..1 ANY d ${edgeCollection}
+          RETURN merge(d,{roles:v.roles})
+        `,
       );
       const result = await cursor.next();
       if (!result) throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
@@ -50,14 +56,4 @@ export class UsersRepository extends ArangoDbRepository {
     }
   }
 
-  //TODO Terminar de implementar y hacer funcionar 
-  async findRolesByUsername(username: string) {
-    try {
-      const collection = await this.getCollection();
-      const edgeCollection = await this.getCollection('UserRoles');
-      const cursor = await this.database.query(aql`
-
-            `);
-    } catch (error) {}
-  }
 }

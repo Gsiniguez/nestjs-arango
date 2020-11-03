@@ -21,10 +21,10 @@ export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles('COMUN')
   @Get('/')
   getUsers(@Request() req) {
-    // console.log(req.user);
+    console.log(req.user);
     return this.service.findAll();
   }
 
