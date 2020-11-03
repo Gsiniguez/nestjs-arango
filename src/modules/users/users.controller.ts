@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { from } from 'rxjs';
@@ -19,7 +20,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/')
-  getUsers() {
+  getUsers(@Request() req) {
+    console.log(req.user);
     return this.service.findAll();
   }
 
