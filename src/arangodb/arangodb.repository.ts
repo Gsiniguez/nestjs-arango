@@ -91,6 +91,7 @@ export class ArangoDbRepository {
       );
       const document = await cursor.next();
       obj['updated_at'] = new Date(Date.now() - 1620 * 60 * 1000);
+      obj['state'] = undefined;
       const result = await collection.update(document, obj, {
         returnNew: true,
       });
