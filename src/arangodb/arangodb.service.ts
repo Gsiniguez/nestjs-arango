@@ -10,7 +10,7 @@ export class ArangoDbService implements OnModuleInit {
     Roles: DocumentCollection
     Users: DocumentCollection
     UsersRoles: EdgeCollection
-
+    Person: DocumentCollection
     constructor(
         @Inject("ARANGODB") private readonly db: Database
     ) { }
@@ -25,6 +25,9 @@ export class ArangoDbService implements OnModuleInit {
 
         this.UsersRoles = await this.db.collection("Users-Roles")
         if (!await this.UsersRoles.exists()) await this.UsersRoles.create({ type: CollectionType.EDGE_COLLECTION })
+
+        this.Person = await this.db.collection("Person")
+        if (!await this.Person.exists()) await this.Person.create({ type: CollectionType.DOCUMENT_COLLECTION })
 
     }
 }
